@@ -1,1 +1,1 @@
-# Hierarchical_Text_Classification_with_BERT
+# Hierarchical Text Classification with BERT
