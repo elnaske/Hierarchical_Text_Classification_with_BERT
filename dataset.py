@@ -8,7 +8,7 @@ import pandas as pd
 
 def download_dataset():
     """
-    Downloads the English Blurb Genre Collection dataset.
+    Donwloads the English Blurb Genre Collection dataset.
     """
     url = 'https://fiona.uni-hamburg.de/ca89b3cf/blurbgenrecollectionen.zip'
     save_path = url.split('/')[-1]
@@ -77,6 +77,7 @@ def get_classes(dataset):
         'tier3': t3_classes
     }
 
+    # Dictionaries for converting classes to integers and vice versa
     class_to_idx = {'tier1': {c: i for i, c in enumerate(t1_classes)},
                     'tier2': {c: i for i, c in enumerate(t2_classes)},
                     'tier3': {c: i for i, c in enumerate(t3_classes)}}
@@ -90,7 +91,6 @@ def get_classes(dataset):
     t2_children = {parent: list(df[(df['tier2'] == parent) & (df['tier3'] != 'None')]['tier3'].unique())
                    for parent in t2_classes
                    if parent != 'None'}
-    
     taxonomy = {
         'tier1': t1_children,
         'tier2': t2_children
@@ -120,4 +120,31 @@ class Tier1Dataset(Dataset):
             'input_ids': self.encoding['input_ids'][idx],
             'attention_mask': self.encoding['attention_mask'][idx],
             'labels': self.labels[idx]
+        }
+    
+class Tier3Dataset(Dataset):
+    def __init__(self, descriptions, tier1, tier2, tier3, tokenizer):
+        self.descriptions = descriptions
+        self.tier1 = tier1
+        self.tier2 = tier2
+        self.tier3 = tier3
+
+        self.encoding = tokenizer(
+            self.descriptions,
+            max_length = 512,
+            padding = 'max_length',
+            truncation = True,
+            return_tensors = 'pt'
+        )
+
+    def __len__(self):
+        return len(self.descriptions)
+
+    def __getitem__(self, idx):
+        return {
+            'input_ids': self.encoding['input_ids'][idx],
+            'attention_mask': self.encoding['attention_mask'][idx],
+            't1_labels': self.tier1[idx],
+            't2_labels': self.tier2[idx],
+            't3_labels': self.tier3[idx]
         }
