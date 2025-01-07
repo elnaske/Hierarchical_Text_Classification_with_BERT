@@ -75,14 +75,10 @@ class HierarchicalDataCollator(DataCollatorWithPadding):
 
         return batch
 
-def save_model(save_name, model, tokenizer):
+def save_model(save_name, model):
     dir = 'models'
     save_path = os.path.join(dir, save_name)
     model_save_path = os.path.join(save_path, "model")
-    tokenizer_save_path = os.path.join(save_path, "tokenizer")
 
     model.save_pretrained(model_save_path)
     print(f'Model saved to {model_save_path}')
-
-    tokenizer.save_pretrained(tokenizer_save_path)
-    print(f'Tokenizer saved to {tokenizer_save_path}')
