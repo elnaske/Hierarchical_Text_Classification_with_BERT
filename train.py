@@ -92,17 +92,17 @@ def train(train_set, eval_set):
     model.config.id2label = idx_to_class['tier1']
     model.config.label2id = class_to_idx['tier1']
 
-    return model, tokenizer
+    return model
 
 def main():
     download_dataset()
 
-    train_set = parse_dataset('/content/data/BlurbGenreCollection_EN_train.txt')
-    eval_set = parse_dataset('/content/data/BlurbGenreCollection_EN_dev.txt')
+    train_set = parse_dataset('/data/BlurbGenreCollection_EN_train.txt')
+    eval_set = parse_dataset('/data/BlurbGenreCollection_EN_dev.txt')
 
-    model, tokenizer = train(train_set, eval_set)
+    model = train(train_set, eval_set)
 
-    save_model('models', model, tokenizer)
+    save_model('models', model)
 
 if __name__=="__main__":
     main()
