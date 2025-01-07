@@ -1,0 +1,46 @@
+{
+  "_name_or_path": "/content/drive/MyDrive/GenreClassifier/model_t1/model",
+  "architectures": [
+    "HierarchicalBERT"
+  ],
+  "attention_probs_dropout_prob": 0.1,
+  "bos_token_id": 0,
+  "classifier_dropout": null,
+  "eos_token_id": 2,
+  "hidden_act": "gelu",
+  "hidden_dropout_prob": 0.1,
+  "hidden_size": 768,
+  "id2label": {
+    "0": "Nonfiction",
+    "1": "Fiction",
+    "2": "Children\u2019s Books",
+    "3": "Teen & Young Adult",
+    "4": "Humor",
+    "5": "Poetry",
+    "6": "Classics"
+  },
+  "initializer_range": 0.02,
+  "intermediate_size": 3072,
+  "label2id": {
+    "Children\u2019s Books": 2,
+    "Classics": 6,
+    "Fiction": 1,
+    "Humor": 4,
+    "Nonfiction": 0,
+    "Poetry": 5,
+    "Teen & Young Adult": 3
+  },
+  "layer_norm_eps": 1e-05,
+  "max_position_embeddings": 514,
+  "model_type": "roberta",
+  "num_attention_heads": 12,
+  "num_hidden_layers": 12,
+  "pad_token_id": 1,
+  "position_embedding_type": "absolute",
+  "problem_type": "single_label_classification",
+  "torch_dtype": "float32",
+  "transformers_version": "4.47.1",
+  "type_vocab_size": 1,
+  "use_cache": true,
+  "vocab_size": 50265
+}
