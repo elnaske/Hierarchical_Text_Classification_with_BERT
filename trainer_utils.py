@@ -22,10 +22,18 @@ def compute_metrics(eval_pred):
     tier1_logits, tier2_logits, tier3_logits = predictions
     tier1_labels, tier2_labels, tier3_labels = labels
 
+    # Predictions
     tier1_preds = np.argmax(tier1_logits, axis=-1)
     tier2_preds = np.argmax(tier2_logits, axis=-1)
     tier3_preds = np.argmax(tier3_logits, axis=-1)
 
+    # Predictions given previous tier was predicted correctly
+    tier2_preds_cond = tier2_preds[(tier1_preds == tier1_labels)]
+    tier2_labels_cond = tier2_labels[(tier1_preds == tier1_labels)]
+    tier3_preds_cond = tier3_preds[(tier2_preds == tier2_labels)]
+    tier3_labels_cond = tier3_labels[(tier2_preds == tier2_labels)]
+
+    # Absolute accuracy & f1
     tier1_acc = accuracy_score(tier1_labels, tier1_preds)
     tier2_acc = accuracy_score(tier2_labels, tier2_preds)
     tier3_acc = accuracy_score(tier3_labels, tier3_preds)
@@ -34,13 +42,24 @@ def compute_metrics(eval_pred):
     tier2_f1 = f1_score(tier2_labels, tier2_preds, average = 'macro')
     tier3_f1 = f1_score(tier3_labels, tier3_preds, average = 'macro')
 
+    # Relative accuracy & f1
+    tier2_acc_cond = accuracy_score(tier2_labels_cond, tier2_preds_cond)
+    tier2_f1_macro_cond = f1_score(tier2_labels_cond, tier2_preds_cond, average = "macro")
+
+    tier3_acc_cond = accuracy_score(tier3_labels_cond, tier3_preds_cond)
+    tier3_f1_macro_cond = f1_score(tier3_labels_cond, tier3_preds_cond, average = "macro")
+
     return {
         "Tier 1 Accuracy": tier1_acc,
-        "Tier 2 Accuracy": tier2_acc,
-        "Tier 3 Accuracy": tier3_acc,
+        "Tier 2 Accuracy (Abs.)": tier2_acc,
+        "Tier 3 Accuracy (Abs.)": tier3_acc,
+        "Tier 2 Accuracy (Cond.)": tier2_acc_cond,
+        "Tier 3 Accuracy (Cond.)": tier3_acc_cond,
         "Tier 1 F1": tier1_f1,
-        "Tier 2 F1": tier2_f1,
-        "Tier 3 F1": tier3_f1
+        "Tier 2 F1 (Abs.)": tier2_f1,
+        "Tier 3 F1 (Abs.)": tier3_f1,
+        "Tier 2 F1 (Cond.)": tier2_f1_macro_cond,
+        "Tier 3 F1 (Cond.)": tier3_f1_macro_cond
     }
 
 def get_mask_matrix(relations_map, parent_idxs, child_idxs):
